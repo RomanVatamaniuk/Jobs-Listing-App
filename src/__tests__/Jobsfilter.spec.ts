@@ -26,10 +26,10 @@ const mountComponent = () => {
   return shallowMount(JobsFilter, {
     global: {
       stubs: {
-        'VSelect': VSelectStub,
+        VSelect: VSelectStub,
       },
     },
-  }) as VueWrapper<any>
+  })
 }
 
 describe('JobsFilter', () => {
@@ -47,10 +47,12 @@ describe('JobsFilter', () => {
     wrapper = mountComponent()
 
     const selects = wrapper.findAllComponents(VSelectStub)
-    typeSelect = selects[0]
-    locationSelect = selects[1]
-  })
 
+    expect(selects.length).toBe(2)
+
+    typeSelect = selects[0]!
+    locationSelect = selects[1]!
+  })
 
   it('renders two VSelect components', () => {
     const selects = wrapper.findAllComponents(VSelectStub)
@@ -71,20 +73,15 @@ describe('JobsFilter', () => {
     expect(locationSelect.props('clearable')).toBe('')
   })
 
-
-  it('updates the store\'s selectedType when the job type selector changes', async () => {
+  it("updates the store's selectedType when the job type selector changes", async () => {
     const newType = 'Part-Time'
-
     await typeSelect.vm.$emit('update:modelValue', newType)
-
     expect(selectedTypeRef.value).toBe(newType)
   })
 
-  it('updates the store\'s selectedLocation when the location selector changes', async () => {
+  it("updates the store's selectedLocation when the location selector changes", async () => {
     const newLocation = 'Remote'
-
     await locationSelect.vm.$emit('update:modelValue', newLocation)
-
     expect(selectedLocationRef.value).toBe(newLocation)
   })
 })
