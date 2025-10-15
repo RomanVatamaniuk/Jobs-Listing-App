@@ -86,7 +86,6 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useJobsStore } from '@/stores/JobsStore.ts'
-import type { Job } from '@/stores/JobsStore.ts'
 import ConfirmDialog from './ConfirmDialog.vue'
 import { useSnackbarStore } from '@/stores/SnackbarStore.ts'
 
