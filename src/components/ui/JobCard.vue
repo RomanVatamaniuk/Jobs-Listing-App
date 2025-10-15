@@ -38,6 +38,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import type { Job } from '@/interfaces/job.interface.ts'
+import type { HistoryState } from 'vue-router'
 
 const props = defineProps<{ job: Job }>()
 const router = useRouter()
