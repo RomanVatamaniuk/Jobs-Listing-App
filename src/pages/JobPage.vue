@@ -60,8 +60,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { doc, getDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/firebase.ts'
 import ConfirmDialog from '@/components/ui/ConfirmDialog.vue'
-import type { Job } from '@/stores/JobsStore.ts'
 import { useSnackbarStore } from '@/stores/SnackbarStore.ts'
+import Job from '@/interfaces/job.interface.ts'
 
 const route = useRoute()
 const router = useRouter()

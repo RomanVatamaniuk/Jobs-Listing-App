@@ -45,7 +45,7 @@ const router = useRouter()
 const goToJobPage = () => {
   router.push({
     path: `/${props.job.id}`,
-    state: props.job
+    state: props.job as unknown as HistoryState
   })
 }
 </script>
