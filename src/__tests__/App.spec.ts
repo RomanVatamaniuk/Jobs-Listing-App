@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { createRouter, createWebHistory, Router } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { Router } from 'vue-router'
 
 import App from '@/App.vue'
 

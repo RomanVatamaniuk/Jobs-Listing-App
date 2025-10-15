@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
-import { ComponentPublicInstance } from 'vue'
 import ConfirmDialog from '@/components/ui/ConfirmDialog.vue'
+import { type ComponentPublicInstance } from 'vue'
 
 interface DialogProps {
   modelValue: boolean;
