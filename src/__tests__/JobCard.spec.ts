@@ -1,6 +1,6 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { Job } from '@/stores/JobsStore.ts'
+import type { Job } from '@/interfaces/job.interface.ts'
 
 import JobCard from '@/components/ui/JobCard.vue'
 
@@ -21,6 +21,7 @@ const mockJob: Job = {
   applyLink: 'https://innovatetech.com/apply-vue',
 }
 
+// Stubs for Vuetify components
 const VCardStub = { template: '<div class="v-card-stub"><slot /></div>', name: 'VCard' }
 const VCardTitleStub = { template: '<h2 class="v-card-title-stub"><slot /></h2>', name: 'VCardTitle' }
 const VCardSubtitleStub = { template: '<h3 class="v-card-subtitle-stub"><slot /></h3>', name: 'VCardSubtitle' }
@@ -28,7 +29,18 @@ const VCardTextStub = { template: '<div class="v-card-text-stub"><slot /></div>'
 const VCardActionsStub = { template: '<div class="v-card-actions-stub"><slot /></div>', name: 'VCardActions' }
 
 const VBtnStub = {
-  template: '<button class="v-btn-stub" :href="href" :target="target" :rel="rel" :style="{ color: color }" @click="$emit(\'click\', $event)"><slot /></button>',
+  template: `
+    <button
+      class="v-btn-stub"
+      :href="href"
+      :target="target"
+      :rel="rel"
+      :style="{ color: color }"
+      @click="$emit('click', $event)"
+    >
+      <slot />
+    </button>
+  `,
   name: 'VBtn',
   props: ['href', 'target', 'rel', 'color'],
 }
@@ -38,12 +50,12 @@ const mountComponent = (job: Job) => {
     props: { job },
     global: {
       stubs: {
-        'VCard': VCardStub,
-        'VCardTitle': VCardTitleStub,
-        'VCardSubtitle': VCardSubtitleStub,
-        'VCardText': VCardTextStub,
-        'VCardActions': VCardActionsStub,
-        'VBtn': VBtnStub,
+        VCard: VCardStub,
+        VCardTitle: VCardTitleStub,
+        VCardSubtitle: VCardSubtitleStub,
+        VCardText: VCardTextStub,
+        VCardActions: VCardActionsStub,
+        VBtn: VBtnStub,
       },
     },
   }) as VueWrapper<any>
@@ -60,8 +72,7 @@ describe('JobCard', () => {
   })
 
   it('sets the correct href and target attributes for the "Apply Now" button', () => {
-    const applyButton = wrapper.findAllComponents({ name: 'VBtn' })[0]
-
+    const applyButton = wrapper.findAllComponents({ name: 'VBtn' })[0]!
     expect(applyButton.attributes('href')).toBe(mockJob.applyLink)
     expect(applyButton.attributes('target')).toBe('_blank')
     expect(applyButton.attributes('rel')).toBe('noopener')
@@ -74,19 +85,15 @@ describe('JobCard', () => {
 
   it('navigates when the entire card is clicked', async () => {
     wrapper.vm.goToJobPage()
-
     expect(mockRouterPush).toHaveBeenCalledTimes(1)
     expect(mockRouterPush).toHaveBeenCalledWith(expectedNavigationCall)
   })
 
-  it('does not navigate/call router.push when the "Apply Now" button is clicked (relies on href)', async () => {
-    const applyButton = wrapper.findAllComponents({ name: 'VBtn' })[0]
-
+  it('does not navigate when the "Apply Now" button is clicked (relies on href)', async () => {
+    const applyButton = wrapper.findAllComponents({ name: 'VBtn' })[0]!
     await applyButton.trigger('click')
-
     expect(goToJobPageSpy).not.toHaveBeenCalled()
     expect(mockRouterPush).not.toHaveBeenCalled()
-
     goToJobPageSpy.mockRestore()
   })
 })
