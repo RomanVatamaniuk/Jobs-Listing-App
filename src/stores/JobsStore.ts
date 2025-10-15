@@ -1,26 +1,32 @@
 import { defineStore } from 'pinia'
-import { collection, getDocs, onSnapshot, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
-import { db } from "../firebase.ts"
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  setDoc,
+  type QueryDocumentSnapshot,
+  type DocumentData
+} from 'firebase/firestore'
+import { db } from '../firebase'
 import { ref, computed, type Ref } from 'vue'
-import firebase from 'firebase/compat/app'
-import FirestoreError = firebase.firestore.FirestoreError
-import type { Job } from '@/interfaces/job.interface.ts'
-import { QueryDocumentSnapshot } from 'firebase/firestore'
-import type { DocumentData } from 'firebase/firestore'
+import type { Job } from '@/interfaces/job.interface'
 
 export const useJobsStore = defineStore('jobsStore', () => {
   const jobs: Ref<Job[]> = ref([])
-  const loading: Ref<boolean> = ref(false)
-  const error: Ref<string | null> = ref(null)
+  const loading = ref(false)
+  const error = ref<string | null>(null)
 
-  const selectedType: Ref<string | null> = ref(null)
-  const selectedLocation: Ref<string | null> = ref(null)
+  const selectedType = ref<string | null>(null)
+  const selectedLocation = ref<string | null>(null)
 
-  const filteredJobs = computed<Job[]>(() =>
+  const filteredJobs = computed(() =>
     jobs.value.filter((job: Job) => {
-      const typeMatch: boolean =
+      const typeMatch =
         selectedType.value === null || job.type === selectedType.value
-      const locationMatch: boolean =
+      const locationMatch =
         selectedLocation.value === null || job.location === selectedLocation.value
       return typeMatch && locationMatch
     })
@@ -45,20 +51,21 @@ export const useJobsStore = defineStore('jobsStore', () => {
                 company: data.company ?? '',
                 type: data.type ?? '',
                 location: data.location ?? '',
-                applyLink: data.applyLink ?? '',
+                applyLink: data.applyLink ?? ''
               }
             }
           )
           jobs.value = arr
           loading.value = false
         },
-        (err:  FirestoreError): void => {
+        (err: any): void => {
           error.value = err.message
           loading.value = false
         }
       )
-    } catch (err: any) {
-      error.value = err.message
+    } catch (err: unknown) {
+      if (err instanceof Error) error.value = err.message
+      else error.value = String(err)
       loading.value = false
     }
   }
@@ -70,8 +77,9 @@ export const useJobsStore = defineStore('jobsStore', () => {
     try {
       const jobsRef = collection(db, 'jobs')
       await addDoc(jobsRef, job)
-    } catch (err: Error) {
-      error.value = err.message
+    } catch (err: unknown) {
+      if (err instanceof Error) error.value = err.message
+      else error.value = String(err)
     } finally {
       loading.value = false
     }
@@ -85,8 +93,9 @@ export const useJobsStore = defineStore('jobsStore', () => {
       const jobRef = doc(db, 'jobs', id)
       await deleteDoc(jobRef)
       jobs.value = jobs.value.filter((job: Job) => job.id !== id)
-    } catch (err) {
-      error.value = err.message
+    } catch (err: unknown) {
+      if (err instanceof Error) error.value = err.message
+      else error.value = String(err)
     } finally {
       loading.value = false
     }
@@ -99,11 +108,11 @@ export const useJobsStore = defineStore('jobsStore', () => {
     try {
       const jobRef = doc(db, 'jobs', job.id)
       await setDoc(jobRef, job)
-
       const index = jobs.value.findIndex((j: Job) => j.id === job.id)
       if (index !== -1) jobs.value[index] = job
-    } catch (err: any) {
-      error.value = err.message
+    } catch (err: unknown) {
+      if (err instanceof Error) error.value = err.message
+      else error.value = String(err)
     } finally {
       loading.value = false
     }
@@ -119,6 +128,6 @@ export const useJobsStore = defineStore('jobsStore', () => {
     getJobs,
     addJob,
     deleteJob,
-    updateJob,
+    updateJob
   }
 })

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="mb-3">Edit Vacancy</h1>
-    <CreateVacancyForm v-if="job" :job="job" />
+    <CreateVacancyForm v-if="job" :job="job ?? ({} as Job)" />
     <p v-else>Loading...</p>
   </div>
 </template>
