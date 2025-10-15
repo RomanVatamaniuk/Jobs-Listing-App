@@ -1,0 +1,29 @@
+<template>
+  <div class="container">
+    <h1 class="mb-3">Edit Vacancy</h1>
+    <CreateVacancyForm :job="job"/>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '@/firebase.ts'
+import CreateVacancyForm from '@/components/ui/CreateVacancyForm.vue'
+import type { Job } from '@/stores/JobsStore.ts'
+
+const route = useRoute()
+const job = ref<Job | null>(null)
+
+onMounted(async () => {
+  const jobId = route.params.id as string
+  if (jobId) {
+    const docRef = doc(db, 'jobs', jobId)
+    const snapshot = await getDoc(docRef)
+    if (snapshot.exists()) {
+      job.value = { id: snapshot.id, ...snapshot.data() } as Job
+    }
+  }
+})
+</script>
