@@ -33,7 +33,7 @@ const mockJobs: Job[] = [
 const filteredJobs: Ref<Job[]> = ref([])
 const loading: Ref<boolean> = ref(false)
 const error: Ref<string | null> = ref(null)
-const getJobs = vi.fn<[], Promise<void>>() // Explicitly type spy fn
+const getJobs = vi.fn<[], Promise<void>>()
 
 vi.mock('@/stores/JobsStore.ts', () => ({
   useJobsStore: () => ({
@@ -117,20 +117,20 @@ describe('JobsFeed.vue', () => {
   })
 
   it('correctly calculates totalPages for empty and full data sets', async () => {
-    const getPaginationStub = (): PaginationWrapper =>
-      wrapper.findComponent({ name: 'Pagination' }) as PaginationWrapper
+    const getPaginationStub = (): PaginationWrapper | null =>
+      wrapper.findComponent({ name: 'Pagination' }) as PaginationWrapper | null
 
     filteredJobs.value = []
     await wrapper.vm.$nextTick()
-    expect(getPaginationStub().props('totalPages')).toBe(1)
+    expect(getPaginationStub()?.props('totalPages')).toBe(1)
 
     filteredJobs.value = mockJobs
     await wrapper.vm.$nextTick()
-    expect(getPaginationStub().props('totalPages')).toBe(2)
+    expect(getPaginationStub()?.props('totalPages')).toBe(2)
 
     filteredJobs.value = mockJobs.slice(0, 5)
     await wrapper.vm.$nextTick()
-    expect(getPaginationStub().props('totalPages')).toBe(1)
+    expect(getPaginationStub()?.props('totalPages')).toBe(1)
   })
 
   it('updates paginatedJobs when currentPage changes (Pagination logic)', async () => {
@@ -139,7 +139,7 @@ describe('JobsFeed.vue', () => {
 
     const paginationStub = wrapper.findComponent({
       name: 'Pagination',
-    }) as PaginationWrapper
+    }) as PaginationWrapper | null
 
     expect(wrapper.findAll('[data-testid="job-card"]')).toHaveLength(10)
 
