@@ -1,5 +1,5 @@
 <template>
-  <v-app class="configure-height">
+  <v-app class="configure-height mb-3">
     <v-app-bar>
       <v-app-bar-nav-icon
         class="d-sm-none"

@@ -88,6 +88,7 @@ import { useRouter } from 'vue-router'
 import { useJobsStore } from '@/stores/JobsStore.ts'
 import ConfirmDialog from './ConfirmDialog.vue'
 import { useSnackbarStore } from '@/stores/SnackbarStore.ts'
+import type { Job } from '@/interfaces/job.interface.ts'
 
 const router = useRouter()
 const jobsStore = useJobsStore()
