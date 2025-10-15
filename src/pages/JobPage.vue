@@ -61,7 +61,7 @@ import { doc, getDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '@/firebase.ts'
 import ConfirmDialog from '@/components/ui/ConfirmDialog.vue'
 import { useSnackbarStore } from '@/stores/SnackbarStore.ts'
-import Job from '@/interfaces/job.interface.ts'
+import type { Job } from '@/interfaces/job.interface.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -93,9 +93,7 @@ const confirmDelete = async () => {
   if (!job.value?.id) return
   try {
     await deleteDoc(doc(db, 'jobs', job.value.id))
-
     snackbar.open('Job deleted successfully!', 'success')
-
     router.push('/')
   } catch (error) {
     console.error('Error deleting job:', error)
