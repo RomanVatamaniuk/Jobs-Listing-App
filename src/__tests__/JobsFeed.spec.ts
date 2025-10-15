@@ -14,7 +14,7 @@ interface PaginationProps {
   totalPages: number
 }
 
-type PaginationWrapper = VueWrapper<ComponentPublicInstance<PaginationProps>>
+type PaginationWrapper = VueWrapper<ComponentPublicInstance>
 
 const mockJobs: Job[] = [
   { id: 1, title: 'Job A' },
@@ -117,22 +117,26 @@ describe('JobsFeed.vue', () => {
   })
 
   it('correctly calculates totalPages for empty and full data sets', async () => {
-    const getPaginationStub = (): PaginationWrapper | null => {
-      const stub = wrapper.findComponent({ name: 'Pagination' })
-      return stub.exists() ? (stub as PaginationWrapper) : null
-    }
+    const getPaginationStub = (): PaginationWrapper | null =>
+      wrapper.findComponent({ name: 'Pagination' }) as PaginationWrapper | null
 
     filteredJobs.value = []
     await wrapper.vm.$nextTick()
-    expect(getPaginationStub()!.props('totalPages')).toBe(1)
+    const paginationEmpty = getPaginationStub()
+    expect(paginationEmpty).not.toBeNull()
+    expect(paginationEmpty!.props('totalPages')).toBe(1)
 
     filteredJobs.value = mockJobs
     await wrapper.vm.$nextTick()
-    expect(getPaginationStub()!.props('totalPages')).toBe(2)
+    const paginationFull = getPaginationStub()
+    expect(paginationFull).not.toBeNull()
+    expect(paginationFull!.props('totalPages')).toBe(2)
 
     filteredJobs.value = mockJobs.slice(0, 5)
     await wrapper.vm.$nextTick()
-    expect(getPaginationStub()!.props('totalPages')).toBe(1)
+    const paginationHalf = getPaginationStub()
+    expect(paginationHalf).not.toBeNull()
+    expect(paginationHalf!.props('totalPages')).toBe(1)
   })
 
   it('updates paginatedJobs when currentPage changes (Pagination logic)', async () => {
@@ -141,13 +145,11 @@ describe('JobsFeed.vue', () => {
 
     const paginationStub = wrapper.findComponent({
       name: 'Pagination',
-    }) as PaginationWrapper
+    }) as PaginationWrapper | null
 
     expect(wrapper.findAll('[data-testid="job-card"]')).toHaveLength(10)
 
-    expect(paginationStub.exists()).toBe(true)
-
-    await paginationStub.vm.$emit('update:currentPage', 2)
+    await paginationStub!.vm.$emit('update:currentPage', 2)
     await wrapper.vm.$nextTick()
 
     const jobCardsPage2 = wrapper.findAll('[data-testid="job-card"]')
