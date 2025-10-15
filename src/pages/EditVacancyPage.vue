@@ -11,7 +11,7 @@ import { useRoute } from 'vue-router'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase.ts'
 import CreateVacancyForm from '@/components/ui/CreateVacancyForm.vue'
-import type { Job } from '@/stores/JobsStore.ts'
+import type { Job } from '@/interfaces/job.interface.ts'
 
 const route = useRoute()
 const job = ref<Job | null>(null)

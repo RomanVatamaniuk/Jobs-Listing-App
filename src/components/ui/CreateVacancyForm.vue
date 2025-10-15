@@ -96,6 +96,7 @@ const props = defineProps<{ job?: Job }>()
 
 const isEdit = ref(false)
 const confirmDialog = ref(false)
+const snackbar = ref<{ show: boolean, message: string, color: string } | null>(null)
 
 const form = ref<Job>({
   id: '',

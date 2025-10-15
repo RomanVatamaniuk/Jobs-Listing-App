@@ -4,6 +4,7 @@ import { db } from "../firebase.ts"
 import { ref, computed, type Ref } from 'vue'
 import firebase from 'firebase/compat/app'
 import FirestoreError = firebase.firestore.FirestoreError
+import type { Job } from '@/interfaces/job.interface.ts'
 
 export const useJobsStore = defineStore('jobsStore', () => {
   const jobs: Ref<Job[]> = ref([])
